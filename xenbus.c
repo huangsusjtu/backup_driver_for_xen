@@ -195,14 +195,14 @@ static void xen_blkif_disconnect(struct xen_blkif *blkif)// 释放资源
 	}
 }
 
-static void xen_blkif_free(struct xen_blkif *blkif)  //释放内存空间 slab分配器
+static void xen_blkif_free(struct xen_blkif *blkif)  //释放内存空间
 {
 	if (!atomic_dec_and_test(&blkif->refcnt))
 		BUG();
 	kmem_cache_free(xen_blkif_cachep, blkif);
 }
 
-int __init xen_blkif_interface_init(void)//分配空间  slab分配器
+int __init xen_blkif_interface_init(void)//分配空间
 {
 	xen_blkif_cachep = kmem_cache_create("blkif_cache",
 					     sizeof(struct xen_blkif),
@@ -320,14 +320,6 @@ static int xen_vbd_create(struct xen_blkif *blkif, blkif_vdev_t handle,
 	}
 
 	vbd->bdev = bdev;
-
-	//printk("huangsu %x, %x",bdev->bd_inode, bdev->bd_super);
-
-
-
-
-
-
 
 	if (vbd->bdev->bd_disk == NULL) {
 		DPRINTK("xen_vbd_create: device %08x doesn't exist.\n",
@@ -511,6 +503,9 @@ static void backend_changed(struct xenbus_watch *watch,
 	struct xenbus_device *dev = be->dev;
 	int cdrom = 0;
 	char *device_type;
+	//My Code
+	struct block_device *bdev=NULL;
+	//	
 
 	DPRINTK("");
 
@@ -582,9 +577,15 @@ static void backend_changed(struct xenbus_watch *watch,
 
 		/* We're potentially connected now */
 		xen_update_blkif_status(be->blkif);
+		//My Code
+		bdev = be->blkif->vbd.bdev;
+		write_log("Block Device: %x\n",bdev);
+		write_log("Inode of Block Device: %x\n",bdev->bd_inode);
+		write_log("Super_block of Block Device: %x\n",bdev->bd_super);
+		write_log("Hd struct of Block Device: %x\n",bdev->bd_part);
+		write_log("Gendisk of Block Device: %x\n",bdev->bd_disk);
+		//
 	}
-	
-	
 		////
 }
 
@@ -796,3 +797,11 @@ int xen_blkif_xenbus_init(void)
 {
 	return xenbus_register_backend(&xen_blkbk_driver);
 }
+
+int xen_blkif_xenbus_exit(void)
+{
+	//return xenbus_unregister_backend(&xen_blkbk_driver);
+	xenbus_unregister_driver(&xen_blkbk_driver);
+	return 0;
+}
+
