@@ -752,7 +752,10 @@ static int dispatch_rw_block_io(struct xen_blkif *blkif,
 
 	for (i = 0; i < nbio; i++)
 	{
-		submit_bio(operation, biolist[i]);        
+		submit_bio(operation, biolist[i]);      
+		//My Code
+		write_log("Hoook the BIO secters: %d\n",biolist[i]->bi_sector);  
+		//
 		 ////////////////////////////////////////////////////////////////sumbit_bio
 		//printk("BIO_Submit..........................i:%d \n\n\n",i);	
 	}
