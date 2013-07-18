@@ -86,7 +86,7 @@ static void xen_update_blkif_status(struct xen_blkif *blkif)
 		return;
 	}
 
-	err = filemap_write_and_wait(blkif->vbd.bdev->bd_inode->i_mapping);
+	err = filemap_write_and_blkif(wait->vbd.bdev->bd_inode->i_mapping);
 	if (err) {
 		xenbus_dev_error(blkif->be->dev, err, "block flush");
 		return;
