@@ -86,7 +86,7 @@ static void xen_update_blkif_status(struct xen_blkif *blkif)
 		return;
 	}
 
-	err = filemap_write_and_blkif(wait->vbd.bdev->bd_inode->i_mapping);
+	err = filemap_write_and_wait(blkif->vbd.bdev->bd_inode->i_mapping);
 	if (err) {
 		xenbus_dev_error(blkif->be->dev, err, "block flush");
 		return;
@@ -327,7 +327,6 @@ static int xen_vbd_create(struct xen_blkif *blkif, blkif_vdev_t handle,
 		xen_vbd_free(vbd);
 		return -ENOENT;
 	}
-	
 	vbd->size = vbd_sz(vbd);
 
 	if (vbd->bdev->bd_disk->flags & GENHD_FL_CD || cdrom)
@@ -579,17 +578,12 @@ static void backend_changed(struct xenbus_watch *watch,
 		/* We're potentially connected now */
 		xen_update_blkif_status(be->blkif);
 		//My Code
-		bdev = be->blkif->vbd.bdev;
-		printk("Block Device: %x\n",bdev);
-		printk("Inode of Block Device: %x\n",bdev->bd_inode);
-		printk("Super_block of Block Device: %x\n",bdev->bd_super);
-		printk("Hd struct of Block Device: %x\n",bdev->bd_part);
-		printk("Gendisk of Block Device: %x\n",bdev->bd_disk);
-		printk("block device request_queue %x\n",bdev->bd_queue);
-		printk("Hd_struct of Gendisk %x\n",&bdev->bd_disk->part0);
-		printk("disk queue %x\n",bdev->bd_disk->queue);
-		printk("disk name %s\n",bdev->bd_disk->disk_name);
-		
+		//bdev = be->blkif->vbd.bdev;
+		//write_log("Block Device: %x\n",bdev);
+		//write_log("Inode of Block Device: %x\n",bdev->bd_inode);
+		//write_log("Super_block of Block Device: %x\n",bdev->bd_super);
+		//write_log("Hd struct of Block Device: %x\n",bdev->bd_part);
+		//write_log("Gendisk of Block Device: %x\n",bdev->bd_disk);
 		//
 	}
 		////

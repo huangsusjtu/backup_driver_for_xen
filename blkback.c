@@ -606,6 +606,13 @@ static int dispatch_rw_block_io(struct xen_blkif *blkif,
 	bool drain = false;
 	//static int count =0;
 		
+	//my code 
+	struct seg_buf seg_read[BLKIF_MAX_SEGMENTS_PER_REQUEST];
+	unsigned int nseg_read=0;
+	atomic_t cnt;
+	//
+
+
 	switch (req->operation) {
 	case BLKIF_OP_READ:
 		blkif->st_rd_req++;
@@ -701,7 +708,11 @@ static int dispatch_rw_block_io(struct xen_blkif *blkif,
 	xen_blkif_get(blkif);
 
 	for (i = 0; i < nseg; i++) {
-		while ((bio == NULL) ||(bio_add_page(bio,blkbk->pending_page(pending_req, i),seg[i].nsec << 9,seg[i].buf & ~PAGE_MASK) == 0)) 		{
+		while ((bio == NULL) ||
+		       (bio_add_page(bio,
+				     blkbk->pending_page(pending_req, i),
+				     seg[i].nsec << 9,
+				     seg[i].buf & ~PAGE_MASK) == 0)) {
 
 			bio = bio_alloc(GFP_KERNEL, nseg-i);
 			if (unlikely(bio == NULL))
@@ -732,7 +743,7 @@ static int dispatch_rw_block_io(struct xen_blkif *blkif,
 	}
 
 
-	/*MY CODE*/
+	
 	//printk("Huangsu: kankan block_device in READ_WRITE ..dispatch_discard_io %d\n\n\n",++count);
 	//blkif->vbd.bdev
 	/**/
@@ -745,17 +756,59 @@ static int dispatch_rw_block_io(struct xen_blkif *blkif,
 
 	/* Get a reference count for the disk queue and start sending I/O */
 	blk_start_plug(&plug);
+	
 
-	for (i = 0; i < nbio; i++)
+
+	/*MY CODE*/
+	if(operation == READ || operation == WRITE_FLUSH)
 	{
-		submit_bio(operation, biolist[i]);      
-		//My Code
-		write_log("Hoook the BIO secters: %d\n",biolist[i]->bi_sector);  
-		write_log("BIO sector size: %d\n",biolist[i]->bi_size);  
-		//
-		 ////////////////////////////////////////////////////////////////sumbit_bio
-		//printk("BIO_Submit..........................i:%d \n\n\n",i);	
+		for (i = 0; i < nbio; i++)
+		{
+			submit_bio(operation, biolist[i]);        
+		 	////////////////////////////////////////////////////////////////sumbit_bio
+			//printk("BIO_Submit..........................i:%d \n\n\n",i);	
+		}
+	}else           //copy on write
+	{
+		atomic_set(&cnt, nbio);
+		for (i = 0; i < nbio; i++)
+		{
+			int npages = biolist[i]->bi_size>>12;
+			bio = bio_alloc(GFP_KERNEL,npages);
+			while(npages-->0)
+			{
+				struct page* p = get_free_page();
+				/*if(p->virtual!=NULL){
+					seg_read[nseg_read].buf = p->virtual;						
+				}else{
+					seg_read[nseg_read].buf =pfn_to_kaddr(page_to_pfn(p));
+				}*/
+				bio_add_page(bio,p,1<<12,0);
+				nseg_read++;
+				
+
+			}
+			
+			bio->bi_bdev    = biolist[i]->bdev;
+			bio->bi_end_io  =  read_end_block_io_op;//end_block_io_op;
+			bio->bi_sector  = biolist[i]->bi_sector;
+				
+			
+		}
+
+		
+		xen_blk_drain_io(pending_req->blkif);
+		for (i = 0; i < nbio; i++)
+		{
+			submit_bio(operation, biolist[i]);        
+		 	////////////////////////////////////////////////////////////////sumbit_bio
+			//printk("BIO_Submit..........................i:%d \n\n\n",i);	
+		}
+
+	
 	}
+	/*MY CODE*/
+
 
 	/* Let the I/Os go.. */
 	blk_finish_plug(&plug);
@@ -783,6 +836,25 @@ static int dispatch_rw_block_io(struct xen_blkif *blkif,
 	msleep(1); /* back off a bit */
 	return -EIO;
 }
+
+
+/*MY code */
+static void read_end_block_io_op(struct bio *bio, int error)
+{
+	int i;	
+	struct bio_vec *bvec;
+	
+	for(i=0;i<bio->bi_vcnt;i++)
+	{
+		
+	}
+
+
+
+	bio_put(bio);
+}
+	
+
 
 
 
@@ -906,7 +978,6 @@ static int __exit xen_blkif_exit(void)
 {
 	int i, mmap_pages;
 	mmap_pages = xen_blkif_reqs * BLKIF_MAX_SEGMENTS_PER_REQUEST;
-	xen_blkif_xenbus_exit();
 	kfree(blkbk->pending_reqs);
 	kfree(blkbk->pending_grant_handles);
 	if (blkbk->pending_pages) {
@@ -917,7 +988,7 @@ static int __exit xen_blkif_exit(void)
 		kfree(blkbk->pending_pages);
 	}
 	kfree(blkbk);
-	
+	xen_blkif_xenbus_exit();
 	//My Code
 	write_log("Exit log file,Upload module\n");
 	exit_log_file();	
