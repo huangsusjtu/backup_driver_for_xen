@@ -19,7 +19,7 @@ void exit_log_file()
 	filp_close(gloable_file_handle,NULL);
 }
 
-/*ssize_t write_log(const char *fmt, ...)
+ssize_t write_log(const char *fmt, ...)
 {
 	char buf[1024];
 	int len;
@@ -38,13 +38,8 @@ void exit_log_file()
 	vfs_write(gloable_file_handle,buf,len,&pos);
 	set_fs(fs);
 	return pos;
-}*/
-ssize write_record()
-{
-	
 }
-
-
+/*
 static int file_log_init()
 {
 	open_log_file("/home/huangsu/debuglog");
@@ -54,6 +49,6 @@ static int file_log_init()
 }
 static int file_log_exit()
 {}
-
+*/
 //module_init(file_log_init);
 //module_exit(file_log_exit);
