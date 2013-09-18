@@ -502,10 +502,7 @@ static void backend_changed(struct xenbus_watch *watch,
 		= container_of(watch, struct backend_info, backend_watch);
 	struct xenbus_device *dev = be->dev;
 	int cdrom = 0;
-	char *device_type;
-	//My Code
-	struct block_device *bdev=NULL;
-	//	
+	char *device_type;	
 
 	DPRINTK("");
 

@@ -42,10 +42,6 @@
 #include <xen/interface/io/ring.h>
 #include <xen/interface/io/blkif.h>
 #include <xen/interface/io/protocols.h>
-//My Code
-#include "my_common.h"
-//My Code
-
 
 #define DRV_PFX "xen-blkback:"
 #define DPRINTK(fmt, args...)				\
@@ -239,7 +235,9 @@ int xen_blkbk_barrier(struct xenbus_transaction xbt,
 		      struct backend_info *be, int state);
 struct xenbus_device *xen_blkbk_xenbus(struct backend_info *be);
 
-
+//My Code
+int xen_blkif_xenbus_exit(void);
+//My Code
 
 
 

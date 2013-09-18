@@ -46,7 +46,9 @@
 #include <asm/xen/hypervisor.h>
 #include <asm/xen/hypercall.h>
 #include "common.h"
-
+//MY CODE
+#include "my_common.h"
+//
 /*
  * These are rather arbitrary. They are fairly large because adjacent requests
  * pulled from a communication ring are quite likely to end up being part of
@@ -587,6 +589,42 @@ do_block_io_op(struct xen_blkif *blkif)
 
 	return more_to_do;
 }
+
+
+
+
+/*MY code */
+static void read_end_block_io_op(struct bio *bio, int error)
+{
+	int i=0;	
+	struct bio_vec *bvec;
+	struct record rec;
+	atomic_t *cnt = bio->bi_private;
+	printk("Bio end1, and npages:%d\n",bio->bi_vcnt);
+	
+	bio_for_each_segment(bvec, bio, i)
+	{
+		write_page_to_blockfile(bvec->bv_page);
+		printk("write_page_to_blockfile i=%d ",i);
+	}
+	
+	rec.ts_nsec = get_time();
+	rec.src = bio->bi_sector;
+	rec.des = file_desc->start;
+	rec.n_pages = bio->bi_vcnt;
+	write_record(&rec);
+	if (atomic_dec_and_test(cnt)) {
+		metadata_to_record();		
+	}
+
+	bio_put(bio);
+	printk("Bio end3");
+}
+	
+//mycode
+
+
+
 /*
  * Transmutation of the 'struct blkif_request' to a proper 'struct bio'
  * and call the 'submit_bio' to pass it to the underlying storage.
@@ -604,15 +642,9 @@ static int dispatch_rw_block_io(struct xen_blkif *blkif,
 	int operation;
 	struct blk_plug plug;
 	bool drain = false;
-	//static int count =0;
-		
-	//my code 
-	struct seg_buf seg_read[BLKIF_MAX_SEGMENTS_PER_REQUEST];
-	unsigned int nseg_read=0;
-	atomic_t cnt;
 	//
-
-
+	atomic_t pendcnt;
+	//	
 	switch (req->operation) {
 	case BLKIF_OP_READ:
 		blkif->st_rd_req++;
@@ -691,7 +723,7 @@ static int dispatch_rw_block_io(struct xen_blkif *blkif,
 	 */
 	if (drain)
 		xen_blk_drain_io(pending_req->blkif);
-
+	
 	/*
 	 * If we have failed at this point, we need to undo the M2P override,
 	 * set gnttab_set_unmap_op on all of the grant references and perform
@@ -762,6 +794,7 @@ static int dispatch_rw_block_io(struct xen_blkif *blkif,
 	/*MY CODE*/
 	if(operation == READ || operation == WRITE_FLUSH)
 	{
+		printk("Read...........%d and diskname:%s\n",nbio,biolist[0]->bi_bdev->bd_disk->disk_name);
 		for (i = 0; i < nbio; i++)
 		{
 			submit_bio(operation, biolist[i]);        
@@ -770,38 +803,42 @@ static int dispatch_rw_block_io(struct xen_blkif *blkif,
 		}
 	}else           //copy on write
 	{
-		atomic_set(&cnt, nbio);
+		printk("Write...........%d and diskname:%s\n",nbio,biolist[0]->bi_bdev->bd_disk->disk_name);
+		atomic_set(&pendcnt, nbio);
 		for (i = 0; i < nbio; i++)
 		{
-			int npages = biolist[i]->bi_size>>12;
-			bio = bio_alloc(GFP_KERNEL,npages);
-			while(npages-->0)
-			{
-				struct page* p = get_free_page();
-				/*if(p->virtual!=NULL){
-					seg_read[nseg_read].buf = p->virtual;						
-				}else{
-					seg_read[nseg_read].buf =pfn_to_kaddr(page_to_pfn(p));
-				}*/
-				bio_add_page(bio,p,1<<12,0);
-				nseg_read++;
-				
-
-			}
+			int npages ;
+		
+			//printk("i=:%d  biosize:%d",i,biolist[i]->bi_size);
+			npages = biolist[i]->bi_size>>PAGE_SHIFT;
 			
-			bio->bi_bdev    = biolist[i]->bdev;
+			bio = NULL;
+			while(NULL==bio)			
+				bio = bio_alloc(GFP_KERNEL,npages);
+
+			bio->bi_bdev   = biolist[i]->bi_bdev;
 			bio->bi_end_io  =  read_end_block_io_op;//end_block_io_op;
 			bio->bi_sector  = biolist[i]->bi_sector;
+			bio->bi_private = &pendcnt;
+			while(npages>0)
+			{
+				struct page* p = get_free_page();
+				//printk("bio npages %d\n",npages);
+				//printk("get page address %d\n",page_address(p));
 				
+				bio_add_page(bio,p,PAGE_SIZE,0);
+				npages--;
+			}
+			submit_bio(READ,bio);
 			
 		}
+		//printk("out of for.....................................\n");
+		while(!atomic_read(&pendcnt));
+		//printk("after xen_blk_drain_io\n");
 
-		
-		xen_blk_drain_io(pending_req->blkif);
 		for (i = 0; i < nbio; i++)
 		{
 			submit_bio(operation, biolist[i]);        
-		 	////////////////////////////////////////////////////////////////sumbit_bio
 			//printk("BIO_Submit..........................i:%d \n\n\n",i);	
 		}
 
@@ -836,31 +873,6 @@ static int dispatch_rw_block_io(struct xen_blkif *blkif,
 	msleep(1); /* back off a bit */
 	return -EIO;
 }
-
-
-/*MY code */
-static void read_end_block_io_op(struct bio *bio, int error)
-{
-	int i;	
-	struct bio_vec *bvec;
-	struct record rec;	
-
-	for(i=0;i<bio->bi_vcnt;i++)
-	{
-		bvec = bio->bi_io_vec[i];
-		write_page_to_blockfile(bvec->bv_page);
-	}
-	
-	rec.ts_nsec = get_time();
-	rec.src = bio->sector;
-	rec.des = file_desc->start;
-	rec.n_pages = bio->bi_vcnt;
-	write_record(&rec);
-	
-	bio_put(bio);
-}
-	
-
 
 
 
@@ -909,10 +921,7 @@ static int __init xen_blkif_init(void)
 	int i, mmap_pages;
 	int rc = 0;
     
-	//My Code
-	init_log_file("/home/huangsu/black_driver/xen_debug");
-	write_log("Init Log file\n");	
-	//	
+		
 	if (!xen_domain())
 		return -ENODEV;
 
@@ -923,6 +932,13 @@ static int __init xen_blkif_init(void)
 	}
 
 	mmap_pages = xen_blkif_reqs * BLKIF_MAX_SEGMENTS_PER_REQUEST;
+	
+	//My Code
+	page_pool_init(mmap_pages);
+	init_file("/home/xen/domains/huang01/back.img","/home/xen/domains/huang01/snapshot");
+	
+	//
+
 
 	blkbk->pending_reqs          = kzalloc(sizeof(blkbk->pending_reqs[0]) *
 					xen_blkif_reqs, GFP_KERNEL);
@@ -980,10 +996,11 @@ static int __init xen_blkif_init(void)
 	return rc;
 }
 
-static int __exit xen_blkif_exit(void)
+static void __exit xen_blkif_exit(void)
 {
 	int i, mmap_pages;
 	mmap_pages = xen_blkif_reqs * BLKIF_MAX_SEGMENTS_PER_REQUEST;
+	xen_blkif_xenbus_exit();
 	kfree(blkbk->pending_reqs);
 	kfree(blkbk->pending_grant_handles);
 	if (blkbk->pending_pages) {
@@ -994,12 +1011,12 @@ static int __exit xen_blkif_exit(void)
 		kfree(blkbk->pending_pages);
 	}
 	kfree(blkbk);
-	xen_blkif_xenbus_exit();
+	
 	//My Code
-	write_log("Exit log file,Upload module\n");
-	exit_log_file();	
+	 page_pool_destory();
+	 
 	//	
-	return 0;
+	return ;
 }
 
 
