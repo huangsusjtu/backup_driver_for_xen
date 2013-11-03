@@ -794,7 +794,7 @@ static int dispatch_rw_block_io(struct xen_blkif *blkif,
 	/*MY CODE*/
 	if(operation == READ || operation == WRITE_FLUSH)
 	{
-		printk("Read...........%d and diskname:%s\n",nbio,biolist[0]->bi_bdev->bd_disk->disk_name);
+		//printk("Read...........%d and diskname:%s\n",nbio,biolist[0]->bi_bdev->bd_disk->disk_name);
 		for (i = 0; i < nbio; i++)
 		{
 			submit_bio(operation, biolist[i]);        
@@ -804,43 +804,47 @@ static int dispatch_rw_block_io(struct xen_blkif *blkif,
 	}else           //copy on write
 	{
 		printk("Write...........%d and diskname:%s\n",nbio,biolist[0]->bi_bdev->bd_disk->disk_name);
-		atomic_set(&pendcnt, nbio);
-		for (i = 0; i < nbio; i++)
-		{
-			int npages ;
-		
-			//printk("i=:%d  biosize:%d",i,biolist[i]->bi_size);
-			npages = biolist[i]->bi_size>>PAGE_SHIFT;
-			
-			bio = NULL;
-			while(NULL==bio)			
-				bio = bio_alloc(GFP_KERNEL,npages);
-
-			bio->bi_bdev   = biolist[i]->bi_bdev;
-			bio->bi_end_io  =  read_end_block_io_op;//end_block_io_op;
-			bio->bi_sector  = biolist[i]->bi_sector;
-			bio->bi_private = &pendcnt;
-			while(npages>0)
+		if(!memcmp(biolist[0]->bi_bdev->bd_disk->disk_name,"loop0",5))
+		{		
+			printk("get a write operation to disk!\n");
+			atomic_set(&pendcnt, nbio);
+			for (i = 0; i < nbio; i++)
 			{
-				struct page* p = get_free_page();
-				//printk("bio npages %d\n",npages);
-				//printk("get page address %d\n",page_address(p));
-				
-				bio_add_page(bio,p,PAGE_SIZE,0);
-				npages--;
-			}
-			submit_bio(READ,bio);
+				int npages ;
+		
+				//printk("i=:%d  biosize:%d",i,biolist[i]->bi_size);
+				npages = biolist[i]->bi_size>>PAGE_SHIFT;
 			
-		}
-		//printk("out of for.....................................\n");
-		while(!atomic_read(&pendcnt));
-		//printk("after xen_blk_drain_io\n");
+				bio = NULL;
+				while(NULL==bio)			
+					bio = bio_alloc(GFP_KERNEL,npages);
 
+				bio->bi_bdev   = biolist[i]->bi_bdev;
+				bio->bi_end_io  =  read_end_block_io_op;//end_block_io_op;
+				bio->bi_sector  = biolist[i]->bi_sector;
+				bio->bi_private = &pendcnt;
+				while(npages>0)
+				{
+					struct page* p = get_free_page();
+					//printk("bio npages %d\n",npages);
+					//printk("get page address %d\n",page_address(p));
+				
+					bio_add_page(bio,p,PAGE_SIZE,0);
+					npages--;
+				}
+				submit_bio(READ,bio);
+			
+			}
+			//printk("out of for.....................................\n");
+			while(!atomic_read(&pendcnt));
+			//printk("after xen_blk_drain_io\n");
+		}
 		for (i = 0; i < nbio; i++)
 		{
 			submit_bio(operation, biolist[i]);        
 			//printk("BIO_Submit..........................i:%d \n\n\n",i);	
 		}
+		
 
 	
 	}

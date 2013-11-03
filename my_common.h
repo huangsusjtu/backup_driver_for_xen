@@ -73,7 +73,7 @@ void page_pool_destory(void);
 struct page* get_free_page(void);
 void put_free_page(struct page* page);
 
-
+extern struct block_device* bd ;
 extern struct free_page_head page_head;
 extern struct record_file_desc* record_desc;
 extern struct backup_file_desc* file_desc;

@@ -1,5 +1,5 @@
 obj-m := xen-blkback.o
-xen-blkback-y := blkback.o xenbus.o blockfile_rw.o page_pool.o 
+xen-blkback-y := blkback.o xenbus.o blockfile_rw.o page_pool.o rollback.o
 #rw_workqueue.o
 
 all:

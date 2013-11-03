@@ -159,7 +159,7 @@ static ssize_t read_blockfile_data( const void *buf,loff_t sector,size_t sector_
 bool write_page_to_blockfile(struct page* page)
 {
 	void *buf;
-	loff_t t,t1;
+	loff_t t;
 	if(!page || !file_desc)
 		return false;
 	
@@ -168,10 +168,13 @@ bool write_page_to_blockfile(struct page* page)
 	spin_lock(&file_desc->lock);
 	t=file_desc->start;
 	++file_desc->start;
+	if(file_desc->start == file_desc->n_blocks)
+		file_desc->start = 0;
 	if(file_desc->start==file_desc->end)
 	{		
-		t1=++file_desc->end;
-		file_desc->end = do_div(t1,file_desc->n_blocks);
+		++file_desc->end;
+		if(file_desc->end == file_desc->n_blocks)
+			file_desc->end = 0;
 	}
 	spin_unlock(&file_desc->lock);
 	if(write_blockfile_data(buf,t,PAGE_SHIFT,1)<=0)
@@ -214,9 +217,10 @@ bool read_blockfile_to_page(struct page* page)
 	{	
 		goto fail_unlock;
 	}
-	t = file_desc->end;
-	++file_desc->end;
-	file_desc->end = do_div(t,file_desc->n_blocks);
+	--file_desc->start;
+	if(file_desc->start <0)
+		file_desc->start = file_desc->n_blocks;
+	t = file_desc->start;
 	spin_unlock(&file_desc->lock);
 	if(read_blockfile_data(buf,t,PAGE_SHIFT,1)<=0)
 	{	
@@ -255,13 +259,13 @@ bool read_record(struct record* rec)
 	spin_unlock(&record_desc->lock);*/
 	
 	spin_lock(&record_desc->lock);
-	lof = record_desc->end;
 	if(record_desc->start==record_desc->end)
 	{
 		spin_unlock(&record_desc->lock);
 		return false;
 	}
-	record_desc->end += len;
+	record_desc->start -= len;
+	lof = record_desc->start;
 	spin_unlock(&file_desc->lock);
 	fs = get_fs();
 	set_fs(KERNEL_DS);
