@@ -21,7 +21,10 @@ void init_file(const char* backupfilename,const char *recordfilename)  //初始�
 		return ;
 	record_desc = kmalloc(GFP_KERNEL,sizeof(struct record_file_desc));
 	if(!record_desc)
+	{
+		kfree(file_desc);
 		return;
+	}
 	
 
 	file_desc->file_handle = filp_open(backupfilename,O_RDWR,0666);
