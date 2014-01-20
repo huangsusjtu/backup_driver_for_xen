@@ -1,0 +1,1 @@
+cmd_/home/huangsu/Code/backup_driver_for_xen/xen-blkback.ko := ld -r -m elf_i386 -T /usr/src/linux-headers-3.8.0-19-generic/scripts/module-common.lds --build-id  -o /home/huangsu/Code/backup_driver_for_xen/xen-blkback.ko /home/huangsu/Code/backup_driver_for_xen/xen-blkback.o /home/huangsu/Code/backup_driver_for_xen/xen-blkback.mod.o

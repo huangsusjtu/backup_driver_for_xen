@@ -593,36 +593,6 @@ do_block_io_op(struct xen_blkif *blkif)
 
 
 
-/*MY code */
-static void read_end_block_io_op(struct bio *bio, int error)
-{
-	int i=0;	
-	struct bio_vec *bvec;
-	struct record rec;
-	atomic_t *cnt = bio->bi_private;
-	printk("Bio end1, and npages:%d\n",bio->bi_vcnt);
-	
-	bio_for_each_segment(bvec, bio, i)
-	{
-		write_page_to_blockfile(bvec->bv_page);
-		printk("write_page_to_blockfile i=%d ",i);
-	}
-	
-	rec.ts_nsec = get_time();
-	rec.src = bio->bi_sector;
-	rec.des = file_desc->start;
-	rec.n_pages = bio->bi_vcnt;
-	write_record(&rec);
-	if (atomic_dec_and_test(cnt)) {
-		metadata_to_record();		
-	}
-
-	bio_put(bio);
-	printk("Bio end3");
-}
-	
-//mycode
-
 
 
 /*
@@ -643,8 +613,7 @@ static int dispatch_rw_block_io(struct xen_blkif *blkif,
 	struct blk_plug plug;
 	bool drain = false;
 	//
-	atomic_t pendcnt;
-	//	
+		//	
 	switch (req->operation) {
 	case BLKIF_OP_READ:
 		blkif->st_rd_req++;
@@ -792,63 +761,21 @@ static int dispatch_rw_block_io(struct xen_blkif *blkif,
 
 
 	/*MY CODE*/
-	if(operation == READ || operation == WRITE_FLUSH)
+	if(need_copy_data && operation==WRITE_ODIRECT)
 	{
-		//printk("Read...........%d and diskname:%s\n",nbio,biolist[0]->bi_bdev->bd_disk->disk_name);
-		for (i = 0; i < nbio; i++)
-		{
-			submit_bio(operation, biolist[i]);        
-		 	////////////////////////////////////////////////////////////////sumbit_bio
-			//printk("BIO_Submit..........................i:%d \n\n\n",i);	
-		}
-	}else           //copy on write
-	{
-		printk("Write...........%d and diskname:%s\n",nbio,biolist[0]->bi_bdev->bd_disk->disk_name);
-		if(!memcmp(biolist[0]->bi_bdev->bd_disk->disk_name,"loop0",5))
-		{		
-			printk("get a write operation to disk!\n");
-			atomic_set(&pendcnt, nbio);
-			for (i = 0; i < nbio; i++)
-			{
-				int npages ;
-		
-				//printk("i=:%d  biosize:%d",i,biolist[i]->bi_size);
-				npages = biolist[i]->bi_size>>PAGE_SHIFT;
-			
-				bio = NULL;
-				while(NULL==bio)			
-					bio = bio_alloc(GFP_KERNEL,npages);
-
-				bio->bi_bdev   = biolist[i]->bi_bdev;
-				bio->bi_end_io  =  read_end_block_io_op;//end_block_io_op;
-				bio->bi_sector  = biolist[i]->bi_sector;
-				bio->bi_private = &pendcnt;
-				while(npages>0)
-				{
-					struct page* p = get_free_page();
-					//printk("bio npages %d\n",npages);
-					//printk("get page address %d\n",page_address(p));
-				
-					bio_add_page(bio,p,PAGE_SIZE,0);
-					npages--;
-				}
-				submit_bio(READ,bio);
-			
-			}
-			//printk("out of for.....................................\n");
-			while(!atomic_read(&pendcnt));
-			//printk("after xen_blk_drain_io\n");
-		}
-		for (i = 0; i < nbio; i++)
-		{
-			submit_bio(operation, biolist[i]);        
-			//printk("BIO_Submit..........................i:%d \n\n\n",i);	
-		}
-		
-
-	
+		hook_write(biolist,nbio);
 	}
+
 	/*MY CODE*/
+
+	//printk("Read...........%d and diskname:%s\n",nbio,biolist[0]->bi_bdev->bd_disk->disk_name);
+	for (i = 0; i < nbio; i++)
+	{
+		submit_bio(operation, biolist[i]);        
+	 	////////////////////////////////////////////////////////////////sumbit_bio
+		//printk("BIO_Submit..........................i:%d \n\n\n",i);	
+	}
+
 
 
 	/* Let the I/Os go.. */
@@ -864,9 +791,7 @@ static int dispatch_rw_block_io(struct xen_blkif *blkif,
  fail_flush:
 	xen_blkbk_unmap(pending_req);
  fail_response:
-	/* Haven't submitted any bio's yet. */
-	make_response(blkif, req->u.rw.id, req->operation, BLKIF_RSP_ERROR);
-	free_req(pending_req);
+	/* Haven't submitted any bio's yet. */ make_response(blkif, req->u.rw.id, req->operation, BLKIF_RSP_ERROR); free_req(pending_req);
 	msleep(1); /* back off a bit */
 	return -EIO;
 
@@ -940,7 +865,7 @@ static int __init xen_blkif_init(void)
 	//My Code
 	page_pool_init(mmap_pages);
 	init_file("/home/xen/domains/huang01/back.img","/home/xen/domains/huang01/snapshot");
-	
+    init_user_cmd();	
 	//
 
 
@@ -1018,7 +943,7 @@ static void __exit xen_blkif_exit(void)
 	
 	//My Code
 	 page_pool_destory();
-	 
+	 exit_user_cmd();
 	//	
 	return ;
 }

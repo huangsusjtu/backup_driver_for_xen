@@ -1,0 +1,247 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BLKBACK_INVALID_HANDLE	blkback.c	93;"	d	file:
+BLKIF_PROTOCOL_NATIVE	common.h	/^	BLKIF_PROTOCOL_NATIVE = 1,$/;"	e	enum:blkif_protocol
+BLKIF_PROTOCOL_X86_32	common.h	/^	BLKIF_PROTOCOL_X86_32 = 2,$/;"	e	enum:blkif_protocol
+BLKIF_PROTOCOL_X86_64	common.h	/^	BLKIF_PROTOCOL_X86_64 = 3,$/;"	e	enum:blkif_protocol
+DEBUG_CODE	my_common.h	20;"	d
+DPRINTK	common.h	47;"	d
+DRV_PFX	common.h	46;"	d
+ERR_HANDLE	my_common.h	14;"	d
+FREE_PAGE_SIZE	my_common.h	18;"	d
+INITED_HEAD	my_common.h	15;"	d
+MASK_START	my_common.h	30;"	d
+VBD_SHOW	xenbus.c	220;"	d	file:
+__XEN_BLKIF__BACKEND__COMMON_H__	common.h	28;"	d
+__do_block_io_op	blkback.c	/^__do_block_io_op(struct xen_blkif *blkif)$/;"	f	file:
+__end_block_io_op	blkback.c	/^static void __end_block_io_op(struct pending_req *pending_req, int error)$/;"	f	file:
+_pad1	common.h	/^	blkif_vdev_t   _pad1;        \/* was "handle" for read\/write requests *\/$/;"	m	struct:blkif_x86_32_request_discard
+_pad1	common.h	/^	blkif_vdev_t   _pad1;        \/* was "handle" for read\/write requests *\/$/;"	m	struct:blkif_x86_64_request_discard
+_pad1	common.h	/^	uint32_t       _pad1;        \/* offsetof(blkif_reqest..,u.rw.id)==8  *\/$/;"	m	struct:blkif_x86_64_request_rw
+_pad2	common.h	/^        uint32_t       _pad2;        \/* offsetof(blkif_..,u.discard.id)==8   *\/$/;"	m	struct:blkif_x86_64_request_discard
+alloc_req	blkback.c	/^static struct pending_req *alloc_req(void)       \/\/从表里取出分配一个pending_req$/;"	f	file:
+backend_changed	xenbus.c	/^static void backend_changed(struct xenbus_watch *watch,$/;"	f	file:
+backend_info	xenbus.c	/^struct backend_info {        \/\/后端信息$/;"	s	file:
+backend_watch	xenbus.c	/^	struct xenbus_watch	backend_watch;$/;"	m	struct:backend_info	typeref:struct:backend_info::xenbus_watch	file:
+backup_file_desc	my_common.h	/^struct backup_file_desc{                   \/\/description for backup file$/;"	s
+bd	rollback.c	/^struct block_device* bd = NULL;$/;"	v	typeref:struct:block_device
+bdev	common.h	/^	struct block_device	*bdev;$/;"	m	struct:phys_req	typeref:struct:phys_req::block_device
+bdev	common.h	/^	struct block_device	*bdev;$/;"	m	struct:xen_vbd	typeref:struct:xen_vbd::block_device
+be	common.h	/^	struct backend_info	*be;$/;"	m	struct:xen_blkif	typeref:struct:xen_blkif::backend_info
+blk_protocol	common.h	/^	enum blkif_protocol	blk_protocol;$/;"	m	struct:xen_blkif	typeref:enum:xen_blkif::blkif_protocol
+blk_ring	common.h	/^	void			*blk_ring;$/;"	m	struct:xen_blkif
+blk_ring_lock	common.h	/^	spinlock_t		blk_ring_lock;$/;"	m	struct:xen_blkif
+blk_rings	common.h	/^	union blkif_back_rings	blk_rings;$/;"	m	struct:xen_blkif	typeref:union:xen_blkif::blkif_back_rings
+blkback_name	xenbus.c	/^static int blkback_name(struct xen_blkif *blkif, char *buf)  \/\/从xen_bus中读取设备名$/;"	f	file:
+blkbk	blkback.c	/^static struct xen_blkbk *blkbk;$/;"	v	typeref:struct:xen_blkbk	file:
+blkif	blkback.c	/^	struct xen_blkif	*blkif;$/;"	m	struct:pending_req	typeref:struct:pending_req::xen_blkif	file:
+blkif	xenbus.c	/^	struct xen_blkif	*blkif;$/;"	m	struct:backend_info	typeref:struct:backend_info::xen_blkif	file:
+blkif_back_rings	common.h	/^union blkif_back_rings {$/;"	u
+blkif_common_request	common.h	/^struct blkif_common_request {$/;"	s
+blkif_common_response	common.h	/^struct blkif_common_response {$/;"	s
+blkif_get_x86_32_req	common.h	/^static inline void blkif_get_x86_32_req(struct blkif_request *dst, \/\/简单的转化，拷贝。$/;"	f
+blkif_get_x86_64_req	common.h	/^static inline void blkif_get_x86_64_req(struct blkif_request *dst,$/;"	f
+blkif_notify_work	blkback.c	/^static void blkif_notify_work(struct xen_blkif *blkif)$/;"	f	file:
+blkif_protocol	common.h	/^enum blkif_protocol {$/;"	g
+blkif_x86_32_request	common.h	/^struct blkif_x86_32_request {$/;"	s
+blkif_x86_32_request_discard	common.h	/^struct blkif_x86_32_request_discard {$/;"	s
+blkif_x86_32_request_rw	common.h	/^struct blkif_x86_32_request_rw {$/;"	s
+blkif_x86_32_response	common.h	/^struct blkif_x86_32_response {$/;"	s
+blkif_x86_64_request	common.h	/^struct blkif_x86_64_request {$/;"	s
+blkif_x86_64_request_discard	common.h	/^struct blkif_x86_64_request_discard {$/;"	s
+blkif_x86_64_request_rw	common.h	/^struct blkif_x86_64_request_rw {$/;"	s
+blkif_x86_64_response	common.h	/^struct blkif_x86_64_response {$/;"	s
+block_size	my_common.h	/^	unsigned int block_size;$/;"	m	struct:backup_file_desc
+buf	blkback.c	/^	unsigned long buf;$/;"	m	struct:seg_buf	file:
+common	common.h	/^	struct blkif_common_back_ring common;$/;"	m	union:blkif_back_rings	typeref:struct:blkif_back_rings::blkif_common_back_ring
+connect	xenbus.c	/^static void connect(struct backend_info *be)$/;"	f	file:
+connect_ring	xenbus.c	/^static int connect_ring(struct backend_info *be)$/;"	f	file:
+des	my_common.h	/^	loff_t des ;$/;"	m	struct:record
+dev	common.h	/^	unsigned short		dev;$/;"	m	struct:phys_req
+dev	xenbus.c	/^	struct xenbus_device	*dev;$/;"	m	struct:backend_info	typeref:struct:backend_info::xenbus_device	file:
+discard	common.h	/^		struct blkif_x86_32_request_discard discard;$/;"	m	union:blkif_x86_32_request::__anon1	typeref:struct:blkif_x86_32_request::__anon1::blkif_x86_32_request_discard
+discard	common.h	/^		struct blkif_x86_64_request_discard discard;$/;"	m	union:blkif_x86_64_request::__anon2	typeref:struct:blkif_x86_64_request::__anon2::blkif_x86_64_request_discard
+discard_secure	common.h	/^	unsigned int		discard_secure:1;$/;"	m	struct:xen_vbd
+dispatch_discard_io	blkback.c	/^static int dispatch_discard_io(struct xen_blkif *blkif,\/\/\/\/\/\/\/\/\/\/\/\/\/\/$/;"	f	file:
+dispatch_rw_block_io	blkback.c	/^static int dispatch_rw_block_io(struct xen_blkif *blkif,$/;"	f	file:
+do_block_io_op	blkback.c	/^do_block_io_op(struct xen_blkif *blkif)$/;"	f	file:
+domid	common.h	/^	domid_t			domid;$/;"	m	struct:xen_blkif
+dprint	my_common.h	23;"	d
+dprint	my_common.h	25;"	d
+drain	common.h	/^	atomic_t		drain;$/;"	m	struct:xen_blkif
+drain_complete	common.h	/^	struct completion	drain_complete;$/;"	m	struct:xen_blkif	typeref:struct:xen_blkif::completion
+dummy	common.h	/^	char dummy;$/;"	m	struct:blkif_common_request
+dummy	common.h	/^	char dummy;$/;"	m	struct:blkif_common_response
+end	my_common.h	/^	loff_t end;		$/;"	m	struct:record_file_desc
+end	my_common.h	/^	loff_t end;$/;"	m	struct:backup_file_desc
+end_block_io_op	blkback.c	/^static void end_block_io_op(struct bio *bio, int error)$/;"	f	file:
+end_block_io_op	rollback.c	/^static void end_block_io_op(struct bio *bio, int error)$/;"	f	file:
+exit_file	blockfile_rw.c	/^void exit_file(void)$/;"	f
+expand_pool	page_pool.c	/^static void expand_pool(int size)$/;"	f	file:
+file_desc	blockfile_rw.c	/^struct backup_file_desc* file_desc = NULL;$/;"	v	typeref:struct:backup_file_desc
+file_handle	my_common.h	/^	struct file* file_handle;$/;"	m	struct:backup_file_desc	typeref:struct:backup_file_desc::file
+file_handle	my_common.h	/^	struct file* file_handle;$/;"	m	struct:record_file_desc	typeref:struct:record_file_desc::file
+flag	common.h	/^	uint8_t        flag;         \/* BLKIF_DISCARD_SECURE or zero         *\/$/;"	m	struct:blkif_x86_32_request_discard
+flag	common.h	/^	uint8_t        flag;         \/* BLKIF_DISCARD_SECURE or zero         *\/$/;"	m	struct:blkif_x86_64_request_discard
+flush_support	common.h	/^	unsigned int		flush_support:1;$/;"	m	struct:xen_vbd
+free_list	blkback.c	/^	struct list_head	free_list;$/;"	m	struct:pending_req	typeref:struct:pending_req::list_head	file:
+free_page_head	my_common.h	/^struct free_page_head{                        \/\/page_pool$/;"	s
+free_req	blkback.c	/^static void free_req(struct pending_req *req)$/;"	f	file:
+frontend_changed	xenbus.c	/^static void frontend_changed(struct xenbus_device *dev,$/;"	f	file:
+get_free_page	page_pool.c	/^struct page* get_free_page()$/;"	f
+get_time	blockfile_rw.c	/^long get_time()$/;"	f
+handle	common.h	/^	blkif_vdev_t		handle;$/;"	m	struct:xen_vbd
+handle	common.h	/^	blkif_vdev_t   handle;       \/* only for read\/write requests         *\/$/;"	m	struct:blkif_x86_32_request_rw
+handle	common.h	/^	blkif_vdev_t   handle;       \/* only for read\/write requests         *\/$/;"	m	struct:blkif_x86_64_request_rw
+handle	common.h	/^	unsigned int		handle;$/;"	m	struct:xen_blkif
+id	blkback.c	/^	u64			id;$/;"	m	struct:pending_req	file:
+id	common.h	/^	uint64_t        id;              \/* copied from request *\/$/;"	m	struct:blkif_x86_32_response
+id	common.h	/^	uint64_t       __attribute__((__aligned__(8))) id;$/;"	m	struct:blkif_x86_64_response
+id	common.h	/^	uint64_t       id;           \/* private guest value, echoed in resp  *\/$/;"	m	struct:blkif_x86_32_request_discard
+id	common.h	/^	uint64_t       id;           \/* private guest value, echoed in resp  *\/$/;"	m	struct:blkif_x86_32_request_rw
+id	common.h	/^	uint64_t       id;$/;"	m	struct:blkif_x86_64_request_discard
+id	common.h	/^	uint64_t       id;$/;"	m	struct:blkif_x86_64_request_rw
+init_file	blockfile_rw.c	/^void init_file(const char* backupfilename,const char *recordfilename)  \/\/初始化两个描述符$/;"	f
+irq	common.h	/^	unsigned int		irq;$/;"	m	struct:xen_blkif
+length	my_common.h	/^	unsigned int length;$/;"	m	struct:free_page_head
+lock	my_common.h	/^	spinlock_t lock;$/;"	m	struct:backup_file_desc
+lock	my_common.h	/^	spinlock_t lock;$/;"	m	struct:record_file_desc
+log_stats	blkback.c	/^static unsigned int log_stats;$/;"	v	file:
+major	xenbus.c	/^	unsigned		major;$/;"	m	struct:backend_info	file:
+make_response	blkback.c	/^static void make_response(struct xen_blkif *blkif, u64 id,$/;"	f	file:
+metadata_to_record	blockfile_rw.c	/^ void metadata_to_record(void)$/;"	f
+minor	xenbus.c	/^	unsigned		minor;$/;"	m	struct:backend_info	file:
+mode	xenbus.c	/^	char			*mode;$/;"	m	struct:backend_info	file:
+n_blocks	my_common.h	/^	blkcnt_t n_blocks;   \/\/u64$/;"	m	struct:backup_file_desc
+n_pages	my_common.h	/^	unsigned int n_pages;                          $/;"	m	struct:record
+native	common.h	/^	struct blkif_back_ring        native;$/;"	m	union:blkif_back_rings	typeref:struct:blkif_back_rings::blkif_back_ring
+need_copy_data	my_common.h	32;"	d
+nr_pages	blkback.c	/^	int			nr_pages;$/;"	m	struct:pending_req	file:
+nr_sectors	common.h	/^	uint64_t       nr_sectors;$/;"	m	struct:blkif_x86_32_request_discard
+nr_sectors	common.h	/^	uint64_t       nr_sectors;$/;"	m	struct:blkif_x86_64_request_discard
+nr_sects	common.h	/^	blkif_sector_t		nr_sects;$/;"	m	struct:phys_req
+nr_segments	common.h	/^	uint8_t        nr_segments;  \/* number of segments                   *\/$/;"	m	struct:blkif_x86_32_request_rw
+nr_segments	common.h	/^	uint8_t        nr_segments;  \/* number of segments                   *\/$/;"	m	struct:blkif_x86_64_request_rw
+nsec	blkback.c	/^	unsigned int nsec;$/;"	m	struct:seg_buf	file:
+obj-m	Makefile	/^obj-m := xen-blkback.o$/;"	m
+operation	blkback.c	/^	unsigned short		operation;$/;"	m	struct:pending_req	file:
+operation	common.h	/^	uint8_t         operation;       \/* copied from request *\/$/;"	m	struct:blkif_x86_32_response
+operation	common.h	/^	uint8_t         operation;       \/* copied from request *\/$/;"	m	struct:blkif_x86_64_response
+operation	common.h	/^	uint8_t        operation;    \/* BLKIF_OP_???                         *\/$/;"	m	struct:blkif_x86_32_request
+operation	common.h	/^	uint8_t        operation;    \/* BLKIF_OP_???                         *\/$/;"	m	struct:blkif_x86_64_request
+page	my_common.h	/^	struct page** page;$/;"	m	struct:free_page_head	typeref:struct:free_page_head::page
+page_head	page_pool.c	/^struct free_page_head page_head = {     .page =NULL,$/;"	v	typeref:struct:free_page_head
+page_lock	my_common.h	/^	spinlock_t page_lock;$/;"	m	struct:free_page_head
+page_pool_destory	page_pool.c	/^void page_pool_destory()$/;"	f
+page_pool_init	page_pool.c	/^int page_pool_init(int size)$/;"	f
+pdevice	common.h	/^	u32			pdevice;$/;"	m	struct:xen_vbd
+pendcnt	blkback.c	/^	atomic_t		pendcnt;$/;"	m	struct:pending_req	file:
+pending_free	blkback.c	/^	struct list_head	pending_free;$/;"	m	struct:xen_blkbk	typeref:struct:xen_blkbk::list_head	file:
+pending_free_lock	blkback.c	/^	spinlock_t		pending_free_lock;$/;"	m	struct:xen_blkbk	file:
+pending_free_wq	blkback.c	/^	wait_queue_head_t	pending_free_wq;$/;"	m	struct:xen_blkbk	file:
+pending_grant_handles	blkback.c	/^	grant_handle_t		*pending_grant_handles;$/;"	m	struct:xen_blkbk	file:
+pending_handle	blkback.c	130;"	d	file:
+pending_page	blkback.c	122;"	d	file:
+pending_pages	blkback.c	/^	struct page		**pending_pages;$/;"	m	struct:xen_blkbk	typeref:struct:xen_blkbk::page	file:
+pending_req	blkback.c	/^struct pending_req {$/;"	s	file:
+pending_reqs	blkback.c	/^	struct pending_req	*pending_reqs;$/;"	m	struct:xen_blkbk	typeref:struct:xen_blkbk::pending_req	file:
+phys_req	common.h	/^struct phys_req {  \/\/描述物理请求$/;"	s
+print_stats	blkback.c	/^static void print_stats(struct xen_blkif *blkif)$/;"	f	file:
+put_free_page	page_pool.c	/^void put_free_page(struct page* page)$/;"	f
+read_blockfile_data	blockfile_rw.c	/^static ssize_t read_blockfile_data( const void *buf,loff_t sector,size_t sector_per_bit,size_t n_sec )$/;"	f	file:
+read_blockfile_to_page	blockfile_rw.c	/^bool read_blockfile_to_page(struct page* page)$/;"	f
+read_end_block_io_op	blkback.c	/^static void read_end_block_io_op(struct bio *bio, int error)$/;"	f	file:
+read_record	blockfile_rw.c	/^bool read_record(struct record* rec)$/;"	f
+readonly	common.h	/^	unsigned char		readonly;$/;"	m	struct:xen_vbd
+record	my_common.h	/^struct record{                             \/\/format for write into snapshot file$/;"	s
+record_desc	blockfile_rw.c	/^struct record_file_desc* record_desc = NULL;$/;"	v	typeref:struct:record_file_desc
+record_file_desc	my_common.h	/^struct record_file_desc{                   \/\/description for record file$/;"	s
+record_to_metadata	blockfile_rw.c	/^ void record_to_metadata(void)$/;"	f
+refcnt	common.h	/^	atomic_t		refcnt;$/;"	m	struct:xen_blkif
+rollback	rollback.c	/^bool rollback(long deta_time)$/;"	f
+rw	common.h	/^		struct blkif_x86_32_request_rw rw;$/;"	m	union:blkif_x86_32_request::__anon1	typeref:struct:blkif_x86_32_request::__anon1::blkif_x86_32_request_rw
+rw	common.h	/^		struct blkif_x86_64_request_rw rw;$/;"	m	union:blkif_x86_64_request::__anon2	typeref:struct:blkif_x86_64_request::__anon2::blkif_x86_64_request_rw
+sector_number	common.h	/^	blkif_sector_t		sector_number;$/;"	m	struct:phys_req
+sector_number	common.h	/^	blkif_sector_t sector_number;\/* start sector idx on disk (r\/w only)  *\/$/;"	m	struct:blkif_x86_32_request_discard
+sector_number	common.h	/^	blkif_sector_t sector_number;\/* start sector idx on disk (r\/w only)  *\/$/;"	m	struct:blkif_x86_32_request_rw
+sector_number	common.h	/^	blkif_sector_t sector_number;\/* start sector idx on disk (r\/w only)  *\/$/;"	m	struct:blkif_x86_64_request_discard
+sector_number	common.h	/^	blkif_sector_t sector_number;\/* start sector idx on disk (r\/w only)  *\/$/;"	m	struct:blkif_x86_64_request_rw
+seg	common.h	/^	struct blkif_request_segment seg[BLKIF_MAX_SEGMENTS_PER_REQUEST];$/;"	m	struct:blkif_x86_32_request_rw	typeref:struct:blkif_x86_32_request_rw::blkif_request_segment
+seg	common.h	/^	struct blkif_request_segment seg[BLKIF_MAX_SEGMENTS_PER_REQUEST];$/;"	m	struct:blkif_x86_64_request_rw	typeref:struct:blkif_x86_64_request_rw::blkif_request_segment
+seg_buf	blkback.c	/^struct seg_buf {$/;"	s	file:
+size	common.h	/^	sector_t		size;$/;"	m	struct:xen_vbd
+src	my_common.h	/^	loff_t src ;$/;"	m	struct:record
+st_ds_req	common.h	/^	int			st_ds_req;$/;"	m	struct:xen_blkif
+st_f_req	common.h	/^	int			st_f_req;$/;"	m	struct:xen_blkif
+st_oo_req	common.h	/^	int			st_oo_req;$/;"	m	struct:xen_blkif
+st_print	common.h	/^	unsigned long		st_print;$/;"	m	struct:xen_blkif
+st_rd_req	common.h	/^	int			st_rd_req;$/;"	m	struct:xen_blkif
+st_rd_sect	common.h	/^	int			st_rd_sect;$/;"	m	struct:xen_blkif
+st_wr_req	common.h	/^	int			st_wr_req;$/;"	m	struct:xen_blkif
+st_wr_sect	common.h	/^	int			st_wr_sect;$/;"	m	struct:xen_blkif
+start	my_common.h	/^	loff_t start;          \/\/u64$/;"	m	struct:backup_file_desc
+start	my_common.h	/^	loff_t start;$/;"	m	struct:record_file_desc
+status	blkback.c	/^	int			status;$/;"	m	struct:pending_req	file:
+status	common.h	/^	int16_t         status;          \/* BLKIF_RSP_???       *\/$/;"	m	struct:blkif_x86_32_response
+status	common.h	/^	int16_t         status;          \/* BLKIF_RSP_???       *\/$/;"	m	struct:blkif_x86_64_response
+ts_nsec	my_common.h	/^	long ts_nsec ;                     \/\/timestamp$/;"	m	struct:record
+type	common.h	/^	unsigned char		type;$/;"	m	struct:xen_vbd
+u	common.h	/^	} u;$/;"	m	struct:blkif_x86_32_request	typeref:union:blkif_x86_32_request::__anon1
+u	common.h	/^	} u;$/;"	m	struct:blkif_x86_64_request	typeref:union:blkif_x86_64_request::__anon2
+vaddr	blkback.c	/^static inline unsigned long vaddr(struct pending_req *req, int seg) \/\/很巧妙 ，req - page - pfn - addr$/;"	f	file:
+vaddr_pagenr	blkback.c	/^static inline int vaddr_pagenr(struct pending_req *req, int seg)  \/\/index of segments$/;"	f	file:
+vbd	common.h	/^	struct xen_vbd		vbd;$/;"	m	struct:xen_blkif	typeref:struct:xen_blkif::xen_vbd
+vbd_sz	common.h	207;"	d
+waiting_reqs	common.h	/^	unsigned int		waiting_reqs;$/;"	m	struct:xen_blkif
+waiting_to_free	common.h	/^	wait_queue_head_t	waiting_to_free;$/;"	m	struct:xen_blkif
+wq	common.h	/^	wait_queue_head_t	wq;$/;"	m	struct:xen_blkif
+write_blockfile_data	blockfile_rw.c	/^static ssize_t write_blockfile_data( const void *buf,loff_t sector,size_t sector_per_bit,size_t n_sec )$/;"	f	file:
+write_page_to_blockfile	blockfile_rw.c	/^bool write_page_to_blockfile(struct page* page)$/;"	f
+write_record	blockfile_rw.c	/^bool write_record(struct record* rec)$/;"	f
+x86_32	common.h	/^	struct blkif_x86_32_back_ring x86_32;$/;"	m	union:blkif_back_rings	typeref:struct:blkif_back_rings::blkif_x86_32_back_ring
+x86_64	common.h	/^	struct blkif_x86_64_back_ring x86_64;$/;"	m	union:blkif_back_rings	typeref:struct:blkif_back_rings::blkif_x86_64_back_ring
+xen-blkback-y	Makefile	/^xen-blkback-y := blkback.o xenbus.o blockfile_rw.o page_pool.o rollback.o$/;"	m
+xen_blk_drain_io	blkback.c	/^static void xen_blk_drain_io(struct xen_blkif *blkif)$/;"	f	file:
+xen_blkbk	blkback.c	/^struct xen_blkbk {$/;"	s	file:
+xen_blkbk_barrier	xenbus.c	/^int xen_blkbk_barrier(struct xenbus_transaction xbt,$/;"	f
+xen_blkbk_discard	xenbus.c	/^static void xen_blkbk_discard(struct xenbus_transaction xbt, struct backend_info *be)$/;"	f	file:
+xen_blkbk_flush_diskcache	xenbus.c	/^int xen_blkbk_flush_diskcache(struct xenbus_transaction xbt,$/;"	f
+xen_blkbk_ids	xenbus.c	/^static const struct xenbus_device_id xen_blkbk_ids[] = {$/;"	v	typeref:struct:xenbus_device_id	file:
+xen_blkbk_map	blkback.c	/^static int xen_blkbk_map(struct blkif_request *req,$/;"	f	file:
+xen_blkbk_probe	xenbus.c	/^static int xen_blkbk_probe(struct xenbus_device *dev,$/;"	f	file:
+xen_blkbk_remove	xenbus.c	/^static int xen_blkbk_remove(struct xenbus_device *dev)$/;"	f	file:
+xen_blkbk_unmap	blkback.c	/^static void xen_blkbk_unmap(struct pending_req *req)       \/\/$/;"	f	file:
+xen_blkbk_xenbus	xenbus.c	/^struct xenbus_device *xen_blkbk_xenbus(struct backend_info *be)$/;"	f
+xen_blkif	common.h	/^struct xen_blkif {        \/\/xen_blk_interface$/;"	s
+xen_blkif_alloc	xenbus.c	/^static struct xen_blkif *xen_blkif_alloc(domid_t domid)$/;"	f	file:
+xen_blkif_be_int	blkback.c	/^irqreturn_t xen_blkif_be_int(int irq, void *dev_id)$/;"	f
+xen_blkif_cachep	xenbus.c	/^static struct kmem_cache *xen_blkif_cachep;  \/\/cache, 用于存储struct xen_blkif， 这个结构与前端Domu一一对应$/;"	v	typeref:struct:kmem_cache	file:
+xen_blkif_disconnect	xenbus.c	/^static void xen_blkif_disconnect(struct xen_blkif *blkif)\/\/ 释放资源$/;"	f	file:
+xen_blkif_exit	blkback.c	/^module_exit(xen_blkif_exit);$/;"	v
+xen_blkif_exit	blkback.c	/^static void __exit xen_blkif_exit(void)$/;"	f	file:
+xen_blkif_free	xenbus.c	/^static void xen_blkif_free(struct xen_blkif *blkif)  \/\/释放内存空间$/;"	f	file:
+xen_blkif_get	common.h	211;"	d
+xen_blkif_init	blkback.c	/^module_init(xen_blkif_init);$/;"	v
+xen_blkif_init	blkback.c	/^static int __init xen_blkif_init(void)$/;"	f	file:
+xen_blkif_interface_init	xenbus.c	/^int __init xen_blkif_interface_init(void)\/\/分配空间$/;"	f
+xen_blkif_map	xenbus.c	/^static int xen_blkif_map(struct xen_blkif *blkif, unsigned long shared_page,$/;"	f	file:
+xen_blkif_put	common.h	212;"	d
+xen_blkif_reqs	blkback.c	/^static int xen_blkif_reqs = 64;$/;"	v	file:
+xen_blkif_schedule	blkback.c	/^int xen_blkif_schedule(void *arg) \/\/????????? $/;"	f
+xen_blkif_xenbus_exit	xenbus.c	/^int xen_blkif_xenbus_exit(void)$/;"	f
+xen_blkif_xenbus_init	xenbus.c	/^int xen_blkif_xenbus_init(void)$/;"	f
+xen_update_blkif_status	xenbus.c	/^static void xen_update_blkif_status(struct xen_blkif *blkif)$/;"	f	file:
+xen_vbd	common.h	/^struct xen_vbd {$/;"	s
+xen_vbd_create	xenbus.c	/^static int xen_vbd_create(struct xen_blkif *blkif, blkif_vdev_t handle,$/;"	f	file:
+xen_vbd_free	xenbus.c	/^static void xen_vbd_free(struct xen_vbd *vbd)$/;"	f	file:
+xen_vbd_resize	blkback.c	/^static void xen_vbd_resize(struct xen_blkif *blkif)$/;"	f	file:
+xen_vbd_translate	blkback.c	/^static int xen_vbd_translate(struct phys_req *req, struct xen_blkif *blkif,  \/\/把interface中的扇区信息写到phy_req中, 往下传递$/;"	f	file:
+xen_vbdstat_attrs	xenbus.c	/^static struct attribute *xen_vbdstat_attrs[] = {$/;"	v	typeref:struct:attribute	file:
+xen_vbdstat_group	xenbus.c	/^static struct attribute_group xen_vbdstat_group = {$/;"	v	typeref:struct:attribute_group	file:
+xenblkd	common.h	/^	struct task_struct	*xenblkd;$/;"	m	struct:xen_blkif	typeref:struct:xen_blkif::task_struct
+xenvbd_sysfs_addif	xenbus.c	/^static int xenvbd_sysfs_addif(struct xenbus_device *dev)$/;"	f	file:
+xenvbd_sysfs_delif	xenbus.c	/^static void xenvbd_sysfs_delif(struct xenbus_device *dev)$/;"	f	file:

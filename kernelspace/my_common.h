@@ -25,6 +25,16 @@
 #define dprint(a)
 #endif
 
+extern int flag;
+
+#define	MASK_START 1
+#define need_copy_data  (flag & MASK_START) 
+
+//cmd from user space
+#define RECODR   15
+#define STOP     16
+#define ROLLBACK 17
+//
 
 struct backup_file_desc{                   //description for backup file
 	struct file* file_handle;
@@ -61,6 +71,7 @@ long get_time(void); // timestamp
 void init_file(const char* backupfilename,const char *recordfilename) ; //初始化两个描述符
 void exit_file(void);
 
+//operation for file
 void metadata_to_record(void);
 void record_to_metadata(void);
 bool read_record(struct record* rec);
@@ -68,10 +79,19 @@ bool write_record(struct record* rec);
 bool read_blockfile_to_page(struct page* page);
 bool write_page_to_blockfile(struct page* page);
 
+//page pool
 int page_pool_init(int size);
 void page_pool_destory(void);
 struct page* get_free_page(void);
 void put_free_page(struct page* page);
+
+//operation 
+void hook_write(struct bio** biolist, int nbio);
+int  rollback(long deta_time);
+
+//char dev for handling  user command
+void init_user_cmd(void);
+void exit_user_cmd(void);
 
 extern struct block_device* bd ;
 extern struct free_page_head page_head;
